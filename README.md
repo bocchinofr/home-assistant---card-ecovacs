@@ -8,3 +8,4 @@ La card è utilizzabile per qualsiasi robot integrato in HA,
 Se volete utilizzare anche i pulsanti per il lavaggio delle varie zone,
 occorrerà creare degli script da richiamare nella card. 
 
+Ovviamente è d'obbligo ringraziare domhouse.it da cui ho preso il template della card. 
