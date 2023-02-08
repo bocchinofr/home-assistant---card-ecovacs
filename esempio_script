@@ -1,0 +1,19 @@
+alias: Pulisci Tavolo
+sequence:
+  - service: vacuum.send_command
+    data:
+      command: set_water
+      params:
+        amount: medium
+    target:
+      entity_id: vacuum.arturo
+  - service: vacuum.send_command
+    data:
+      command: spot_area
+      params:
+        rooms: 8
+        cleanings: 1
+    target:
+      entity_id: vacuum.arturo
+mode: single
+icon: mdi:robot-vacuum
