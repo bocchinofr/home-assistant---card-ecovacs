@@ -1,5 +1,11 @@
 # home-assistant---card-ecovacs
 
+Questo progetto non è un installer, ma si tratta di una card personalizzata per il robot aspirapolvere (io ho utilizzato Ecovacs N8 Pro ma può essere adattata ad altri dispositivi).
+
+
+
+
+
 Codice di una card personalizzata per il mio robot ecovacs. 
 
 La card è utilizzabile per qualsiasi robot integrato in HA, 
