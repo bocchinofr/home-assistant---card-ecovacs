@@ -1,23 +1,6 @@
-type: conditional
-conditions:
-  - entity: input_boolean.vacuum_pulsante_visibilita
-    state: 'on'
-card:
+
   type: vertical-stack
   cards:
-    - type: entities
-      card_mod:
-        style: |
-          ha-card {
-            background: none;
-            box-shadow: none;
-            --ha-card-background: #fafafa;
-            margin-top: -20px;
-            margin-bottom: -20px
-          }
-      entities:
-        - type: custom:text-divider-row
-          text: A R T U R O
     - type: conditional
       conditions:
         - entity: vacuum.arturo
@@ -565,5 +548,3 @@ card:
                         https://github.com/bocchinofr/home-assistant---card-ecovacs
 
                         ___
-view_layout:
-  grid-area: riga2col1
