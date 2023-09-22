@@ -2,6 +2,7 @@
 
 Questo progetto non è un installer, ma si tratta di una card personalizzata per il robot aspirapolvere (io ho utilizzato Ecovacs N8 Pro ma può essere adattata ad altri dispositivi).
 
+![Schermata 2023-09-22 alle 12 30 18](https://github.com/bocchinofr/home-assistant---card-ecovacs/assets/102295851/49b5002e-3d37-4afe-b03f-f0c754725cab)
 
 
 
