@@ -1,0 +1,238 @@
+##### CARD ECOVACS N8 PRO 
+# la card è stata creata su un roboto ecovacs N8 pro ma è utilizzabile anche per altri
+
+###############################################
+#
+#             INPUT BOOLEAN                   #
+#
+###############################################
+
+
+input_boolean:
+  vacuum_seleziona_cucina:
+    initial: false
+    icon: mdi:silverware-fork-knife
+  vacuum_seleziona_tavolo:
+    initial: false
+    icon: mdi:table-chair
+  vacuum_seleziona_soggiorno:
+    initial: false
+    icon: mdi:sofa
+  vacuum_seleziona_ingresso:
+    initial: false
+    icon: mdi:door-open
+  vacuum_seleziona_bagno:
+    initial: false
+    icon: mdi:shower-head
+  vacuum_seleziona_lavanderia:
+    initial: false
+    icon: mdi:washing-machine
+  vacuum_seleziona_camera:
+    initial: false
+    icon: mdi:bed
+  vacuum_seleziona_cameretta:
+    initial: false
+    icon: mdi:teddy-bear
+
+
+##############################################
+#
+#                   SENSORS                  #
+#
+##############################################
+
+sensor:
+
+# SENSORE ARTURO FAN SPEED
+
+  - platform: template
+    sensors:
+      arturo_fan_speed:
+        friendly_name: 'Arturo Fan Speed'
+        icon_template: mdi:fan
+        value_template: "{{ state_attr('vacuum.arturo', 'fan_speed') }}"
+
+## SENSORE TEMPO ULTIMO CAMBIAMENTO ARTURO 
+
+  - platform: template
+    sensors:
+      ultima_pulizia_vacuum:
+        friendly_name: 'Ultima pulizia vacuum'
+        unit_of_measurement: ''
+        value_template: "{{ ( (as_timestamp(now()) - as_timestamp(states.sensor.arturo_stats_total_time.last_changed) )/3600 ) | float | round(2) }}"
+
+
+
+##############################################
+#
+#                   SCRIPTS                  #
+#
+##############################################
+
+script:
+
+######### PULIZIA ZONE #################
+
+  vacuum_pulisci_selezione:
+    alias: 'Vacuum: pulisci selezione'
+    sequence:
+    - alias: Get room id using input select
+      variables:
+        # store room number in array if room is on
+        target_rooms: >-
+          {% set rooms = [] %}
+          {% if states('input_boolean.vacuum_seleziona_cucina') == 'on' %}
+              {% set rooms = rooms + [2] %}
+          {% endif %}
+          {% if states('input_boolean.vacuum_seleziona_tavolo') == 'on' %}
+              {% set rooms = rooms + [10] %}
+          {% endif %}
+          {% if states('input_boolean.vacuum_seleziona_soggiorno') == 'on' %}
+              {% set rooms = rooms + [9] %}
+          {% endif %}
+          {% if states('input_boolean.vacuum_seleziona_ingresso') == 'on' %}
+              {% set rooms = rooms + [0] %}
+          {% endif %}
+          {% if states('input_boolean.vacuum_seleziona_bagno') == 'on' %}
+              {% set rooms = rooms + [3] %}
+          {% endif %}
+          {% if states('input_boolean.vacuum_seleziona_lavanderia') == 'on' %}
+              {% set rooms = rooms + [4] %}
+          {% endif %}
+          {% if states('input_boolean.vacuum_seleziona_camera') == 'on' %}
+              {% set rooms = rooms + [8] %}
+          {% endif %}
+          {% if states('input_boolean.vacuum_seleziona_cameretta') == 'on' %}
+              {% set rooms = rooms + [6] %}
+          {% endif %}
+          {{rooms}}
+  # check that almost one room was selected
+    - condition: template
+      value_template: '{{ target_rooms | length > 0 }}'
+    # call service to clean selected rooms
+    - service: vacuum.send_command
+      target:
+        entity_id: vacuum.arturo
+      data:
+        command: spot_area
+        # segments should be an array of numbers if more than one room want to be cleaned
+        params:
+          rooms: '{{ target_rooms | replace("[", "") | replace("]", "") }}'
+    #set water amount
+    - device_id: 9b5fb2d6642fd7645b750a5e469654b8
+      domain: select
+      entity_id: select.arturo_water_amount
+      type: select_option
+      option: medium
+
+########### PULIZIA TUTTO/ GIORNO/ NOTTE ###################
+
+  pulisci_zona_giorno:
+    alias: 'Vacuum: Pulisci zona giorno'
+    sequence:
+    - device_id: 9b5fb2d6642fd7645b750a5e469654b8
+      domain: select
+      entity_id: select.arturo_water_amount
+      type: select_option
+      option: medium
+    - service: vacuum.send_command
+      data:
+        command: spot_area
+        params:
+          rooms: 2,10,9,0
+          cleanings: 1
+      target:
+        entity_id: vacuum.arturo
+    mode: single
+    icon: mdi:robot-vacuum
+  pulisci_zona_notte:
+    alias: 'Vacuum: pulisci zona notte'
+    sequence:
+    - device_id: 9b5fb2d6642fd7645b750a5e469654b8
+      domain: select
+      entity_id: select.arturo_water_amount
+      type: select_option
+      option: medium
+    - service: vacuum.send_command
+      data:
+        command: spot_area
+        params:
+          rooms: 8,6,3,4
+          cleanings: 1
+      target:
+        entity_id: vacuum.arturo
+    mode: single
+    icon: mdi:robot-vacuum
+  pulisci_tutto:
+    alias: 'Vacuum: Pulisci tutto'
+    sequence:
+    - service: vacuum.send_command
+      data:
+        command: spot_area
+        params:
+          rooms: 2,10,9,0,8,6,3,4
+          cleanings: 1
+      target:
+        entity_id: vacuum.arturo
+    - device_id: 9b5fb2d6642fd7645b750a5e469654b8
+      domain: select
+      entity_id: select.arturo_water_amount
+      type: select_option
+      option: medium
+    mode: single
+    icon: mdi:robot-vacuum
+
+
+##############################################
+#
+#               AUTOMAZIONI                  #
+#
+##############################################
+
+## PULIZIA ORE 19
+
+automation:
+- id: '1682075125162'
+  alias: 'Vacuum: pulizia ore 19'
+  description: ''
+  trigger:
+  - platform: time
+    at: '19:00:00'
+  condition:
+  - condition: and
+    conditions:
+    - condition: device
+      device_id: 9b5fb2d6642fd7645b750a5e469654b8
+      domain: vacuum
+      entity_id: vacuum.arturo
+      type: is_docked
+    - condition: numeric_state
+      entity_id: sensor.ultima_pulizia_vacuum
+      above: 8
+  action:
+  - service: script.pulisci_tutto
+    data: {}
+  - service: notify.mobile_app_iphone_di_francesco
+    data:
+      title: Start pulizia automatica
+      message: pulizia automatica partita
+  mode: single
+
+
+## seleziona fan speed
+
+- id: '1676026384160'
+  alias: 'Vacuum: set fan speed'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.selettore_fan_speed
+  condition: []
+  action:
+  - service: vacuum.set_fan_speed
+    data:
+      fan_speed: '{{states(''input_select.selettore_fan_speed'')}}'
+    target:
+      device_id: 9b5fb2d6642fd7645b750a5e469654b8
+  mode: single
