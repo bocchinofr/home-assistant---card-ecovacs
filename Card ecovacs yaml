@@ -1,495 +1,569 @@
-type: entities
-show_header_toggle: 'off'
-style: |
-  .card-header {
-    padding: 0px 0px 0px 0px !important;
-  }
-entities:
-  - type: section
-    label: Pannello Ecovacs N8 pro +
-  - type: custom:hui-element
-    card_type: vertical-stack
-    cards:
-      - type: horizontal-stack
+type: conditional
+conditions:
+  - entity: input_boolean.vacuum_pulsante_visibilita
+    state: 'on'
+card:
+  type: vertical-stack
+  cards:
+    - type: entities
+      card_mod:
+        style: |
+          ha-card {
+            background: none;
+            box-shadow: none;
+            --ha-card-background: #fafafa;
+            margin-top: -20px;
+            margin-bottom: -20px
+          }
+      entities:
+        - type: custom:text-divider-row
+          text: A R T U R O
+    - type: conditional
+      conditions:
+        - entity: vacuum.arturo
+          state: docked
+      card:
+        type: horizontal-stack
         cards:
-          - type: picture-elements
-            image: /local/Floorplan/transparente.png
-            elements:
-              - type: image
-                entity: vacuum.arturo
-                state_image:
-                  docked: /local/ecovacs_n8_nosfondo.png
-                  cleaning: /local/ecovacs.gif
-                  returning: /local/ecovacs.gif
-                  paused: /local/ecovacs_n8_paused.png
-                style:
-                  left: 50%
-                  top: 50%
-                  width: 100%
-            style: |
-              ha-card {
-                  --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
-                  --ha-card-background: "rgba(0, 0, 0, 0.0)";
-                  --ha-card-box-shadow: 'none';
-              }
-          - type: vertical-stack
-            cards:
-              - type: custom:button-card
-                layout: icon_name_state2nd
-                entity: vacuum.arturo
-                name: Stato
-                show_icon: true
-                show_state: true
-                icon: mdi:connection
-                styles:
-                  grid:
-                    - grid-template-columns: 50px auto
-                  icon:
-                    - padding: 0px 0px
-                    - height: 30px
-                    - width: 30px
-                    - color: orange
-                  card:
-                    - '--ha-card-background': rgba(0, 0, 0, 0.0)
-                    - '--ha-card-box-shadow': none
-                  state:
-                    - padding: 0px 10px
-                    - justify-self: start
-                    - font-family: Roboto, sans-serif
-                    - font-size: 15px
-                  name:
-                    - padding: 0px 10px
-                    - justify-self: start
-                    - color: var(--primary-text-color)
-                state:
-                  - value: docked
-                    styles:
-                      icon:
-                        - color: dakgrey
-                tap_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      title: Ultima pulizia
-                      content:
-                        type: entities
-                        entities:
-                          - style:
-                              background: '#62717b'
-                              height: 1px
-                              margin-left: auto
-                              margin-right: auto
-                            type: divider
-                          - entity: sensor.arturo_last_error
-                            name: Errori
-                            state_color: true
-                          - type: divider
-                          - entity: sensor.arturo_last_cleaning
-                            name: Ultima pulizia
-                            icon: mdi:clock
-                            state_color: true
-                          - type: divider
-                          - entity: sensor.arturo_stats_area
-                            name: Statistiche area
-                            state_color: true
-                          - type: divider
-                          - entity: sensor.arturo_stats_time
-                            name: Tempo
-                            state_color: true
-                          - type: divider
-                          - entity: sensor.arturo_stats_total_area
-                            name: Area totale
-                            state_color: true
-                          - type: divider
-                          - entity: sensor.arturo_stats_total_cleanings
-                            name: Pulizie totali
-                            state_color: true
-                          - type: divider
-                          - entity: sensor.arturo_stats_total_time
-                            name: Tempo totale
-                            state_color: true
-                          - type: divider
-                          - entity: sensor.arturo_stats_type
-                            name: Tipo ultima pulizia
-                            state_color: true
-                          - style:
-                              background: '#62717b'
-                              height: 1px
-                              margin-left: auto
-                              margin-right: auto
-                            type: divider
-              - type: custom:button-card
-                layout: icon_name_state2nd
-                entity: select.arturo_water_amount
-                name: livello acqua
-                show_icon: true
-                show_state: true
-                icon: mdi:water
-                styles:
-                  grid:
-                    - grid-template-columns: 50px auto
-                  icon:
-                    - padding: 0px 0px
-                    - height: 30px
-                    - width: 30px
-                    - color: '#1e90ff'
-                  card:
-                    - '--ha-card-background': rgba(0, 0, 0, 0.0)
-                    - '--ha-card-box-shadow': none
-                  state:
-                    - padding: 0px 10px
-                    - justify-self: start
-                    - font-family: Roboto, sans-serif
-                    - font-size: 15px
-                  name:
-                    - padding: 0px 10px
-                    - justify-self: start
-                    - color: var(--primary-text-color)
-                tap_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      title: livello acqua
-                      auto_close: false
-                      content:
-                        type: entities
-                        entities:
-                          - entity: select.arturo_water_amount
-              - type: custom:button-card
-                layout: icon_name_state2nd
-                entity: binary_sensor.arturo_mop_attached
-                name: Panno pulizia
-                show_icon: true
-                show_state: true
-                state_color: true
-                icon: mdi:clock-fast
-                styles:
-                  grid:
-                    - grid-template-columns: 50px auto
-                  icon:
-                    - padding: 0px 0px
-                    - height: 30px
-                    - width: 30px
-                  card:
-                    - '--ha-card-background': rgba(0, 0, 0, 0.0)
-                    - '--ha-card-box-shadow': none
-                  state:
-                    - padding: 0px 10px
-                    - justify-self: start
-                    - font-family: Roboto, sans-serif
-                    - font-size: 15px
-                  name:
-                    - padding: 0px 10px
-                    - justify-self: start
-                    - color: var(--primary-text-color)
-              - type: custom:slider-entity-row
-                entity: number.arturo_volume
-                name: Volume
-                icon: mdi:volume-equal
-                hide_state: false
-                full_row: true
-                styles: null
-      - type: horizontal-stack
+          - type: custom:mushroom-template-card
+            entity: script.pulisci_tutto
+            primary: TUTTO
+            icon: mdi:home-circle
+            icon_color: '#3D6ED0'
+            layout: vertical
+          - type: custom:mushroom-template-card
+            entity: script.pulisci_zona_giorno
+            primary: GIORNO
+            icon_color: '#FF8000'
+            icon: mdi:weather-sunny
+            layout: vertical
+          - type: custom:mushroom-template-card
+            entity: script.pulisci_zona_notte
+            primary: NOTTE
+            icon_color: '#000066'
+            layout: vertical
+            icon: mdi:moon-waxing-crescent
+          - type: custom:mushroom-template-card
+            primary: ZONE
+            icon_color: '#FF3399'
+            layout: vertical
+            icon: mdi:map-check
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  title: Seleziona zone da pulire
+                  size: normal
+                  content:
+                    type: vertical-stack
+                    cards:
+                      - type: picture-elements
+                        image: /local/Floorplan/casa_18.png
+                        elements:
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 31%
+                              top: 57%
+                            filter: brightness(0%) opacity(20%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_tavolo
+                            style:
+                              left: 31%
+                              top: 57%
+                            tap_action:
+                              action: toggle
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 40%
+                              top: 88%
+                            filter: brightness(0%) opacity(20%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_soggiorno
+                            style:
+                              left: 40%
+                              top: 88%
+                            tap_action:
+                              action: toggle
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 40%
+                              top: 25%
+                            filter: brightness(0%) opacity(30%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_cucina
+                            style:
+                              left: 40%
+                              top: 25%
+                            tap_action:
+                              action: toggle
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 50%
+                              top: 30%
+                            filter: brightness(0%) opacity(30%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_bagno
+                            style:
+                              left: 50%
+                              top: 30%
+                            tap_action:
+                              action: toggle
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 78%
+                              top: 65%
+                            filter: brightness(0%) opacity(20%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_camera
+                            style:
+                              left: 78%
+                              top: 65%
+                            tap_action:
+                              action: toggle
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 60%
+                              top: 65%
+                            filter: brightness(0%) opacity(20%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_ingresso
+                            style:
+                              left: 60%
+                              top: 65%
+                            tap_action:
+                              action: toggle
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 60%
+                              top: 22%
+                            filter: brightness(0%) opacity(20%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_lavanderia
+                            style:
+                              left: 60%
+                              top: 22%
+                            tap_action:
+                              action: toggle
+                          - type: image
+                            image: /local/Floorplan/bottone.png
+                            style:
+                              left: 75%
+                              top: 30%
+                            filter: brightness(0%) opacity(20%)
+                          - type: state-icon
+                            entity: input_boolean.vacuum_seleziona_cameretta
+                            style:
+                              left: 75%
+                              top: 30%
+                            tap_action:
+                              action: toggle
+                      - type: custom:mushroom-template-card
+                        primary: AVVIA PULIZIA
+                        icon: mdi:play
+                        icon_color: red
+                        tap_action:
+                          action: call-service
+                          service: script.vacuum_pulisci_selezione
+                          target: {}
+                      - type: custom:mushroom-select-card
+                        entity: input_select.selettore_fan_speed
+                        layout: horizontal
+                        icon_color: accent
+                      - type: custom:mushroom-select-card
+                        entity: select.arturo_water_amount
+                        layout: horizontal
+                        icon_color: blue
+    - type: conditional
+      conditions:
+        - entity: vacuum.arturo
+          state_not: docked
+      card:
+        type: horizontal-stack
         cards:
-          - type: custom:bar-card
-            show_icon: true
-            align: split
-            columns: 1
-            max: 100
-            positions:
-              icon: inside
-              indicator: inside
-              name: inside
-              value: inside
-            severity:
-              - color: '#1e90ff'
-                from: 70
-                to: 100
-              - color: orange
-                from: 40
-                to: 70
-              - color: red
-                from: '0'
-                to: 40
-            style: |
-              ha-card {
-                --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
-                --ha-card-background: "rgba(0, 0, 0, 0.0)";
-                --paper-item-icon-color: 'var(--text-primary-color';
-                --ha-card-box-shadow: 'none';
-              }
-            entity: sensor.arturo_life_span_filter
-            name: Filtro
-            entity_row: true
-      - type: horizontal-stack
-        cards:
-          - type: custom:bar-card
-            show_icon: true
-            align: split
-            columns: 1
-            max: 100
-            positions:
-              icon: inside
-              indicator: inside
-              name: inside
-              value: inside
-            severity:
-              - color: red
-                from: '0'
-                to: 40
-              - color: orange
-                from: 40
-                to: 70
-              - from: 70
-                to: 100
-                color: '#1e90ff'
-            style: |
-              ha-card {
-                --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
-                --ha-card-background: "rgba(0, 0, 0, 0.0)";
-                --paper-item-icon-color: 'var(--text-primary-color';
-                --ha-card-box-shadow: 'none';
-              }
-            entity: sensor.arturo_life_span_brush
-            name: Spazzola
-            entity_row: true
-          - type: custom:bar-card
-            show_icon: true
-            align: split
-            columns: 1
-            max: 100
-            positions:
-              icon: inside
-              indicator: inside
-              name: inside
-              value: inside
-            severity:
-              - color: red
-                from: '0'
-                to: 40
-              - color: orange
-                from: 40
-                to: 70
-              - from: 70
-                to: 100
-                color: '#1e90ff'
-            style: |
-              ha-card {
-                --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
-                --ha-card-background: "rgba(0, 0, 0, 0.0)";
-                --paper-item-icon-color: 'var(--text-primary-color';
-                --ha-card-box-shadow: 'none';
-              }
-            entity: sensor.arturo_life_span_side_brush
-            name: Spazzole laterali
-            entity_row: true
-  - type: custom:paper-buttons-row
-    buttons:
-      - icon: mdi:star-box-multiple
-        state: '{{ states(''null'') }}'
-        state_styles:
-          'on':
-            icon:
-              color: var(--paper-item-icon-active-color)
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            style:
-              $: |
-                .mdc-dialog
-                .mdc-dialog__container
-                .mdc-dialog__surface {
-                  border-radius: 15px;
-                }
-            data:
-              title: Pulizia zone
-              auto_close: false
-              content:
-                type: entities
-                entities:
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
-                  - entity: button.arturo_relocate
-                    name: Ricolloca
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
-                  - entity: script.pulisci_bagno
-                    icon: mdi:water-check
-                    name: Pulisci bagno
-                  - type: divider
-                  - entity: script.pulisci_camera_da_letto
-                    name: Pulisci camera da letto
-                    icon: mdi:bed
-                  - type: divider
-                  - entity: script.pulisci_cucina
-                    name: Pulisci cucina
-                    icon: mdi:cookie
-                  - type: divider
-                  - entity: script.pulisci_lavanderia
-                    name: Pulisci lavanderia
-                    icon: mdi:washing-machine
-                  - type: divider
-                  - entity: script.pulisci_soggiorno
-                    name: Pulisci soggiorno
-                    icon: mdi:sofa
-                  - type: divider
-                  - entity: script.pulisci_tavolo_2
-                    name: Pulisci tavolo
-                    icon: mdi:chair-school
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
-                  - entity: script.pulisci_zona_giorno
-                    icon: mdi:weather-sunny
-                    name: Pulisci zona giorno
-                  - type: divider
-                  - entity: script.pulisci_zona_notte
-                    icon: mdi:moon-waning-crescent
-                    name: Pulisci zona notte
-                  - type: divider
-                  - entity: script.pulisci_tutto
-                    icon: mdi:home
-                    name: Pulisci tutto
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
-      - icon: mdi:map
-        state: '{{ states(''null'') }}'
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              title: Mappa
-              style:
-                $: |
-                  .mdc-dialog
-                  .mdc-dialog__container
-                  .mdc-dialog__surface {
-                    border-radius: 15px;
-                  }
-              auto_close: false
-              content:
-                type: picture-entity
-                show_state: true
-                show_name: false
-                camera_view: auto
-                entity: camera.arturo_live_map
-                aspect_ratio: 150%
-      - icon: mdi:information
-        state: '{{ states(''sensor.arturo_last_error'')}}'
-        state_styles:
-          'on':
-            icon:
-              color: var(--paper-item-icon-active-color)
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              title: Impostazioni
-              style:
-                $: |
-                  .mdc-dialog
-                  .mdc-dialog__container
-                  .mdc-dialog__surface {
-                    border-radius: 15px;
-                  }
-              auto_close: false
-              content:
-                type: entities
-                entities:
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
-                  - entity: switch.arturo_advanced_mode
-                    name: Modalità advanced
-                    state_color: true
-                  - type: divider
-                  - entity: switch.arturo_carpet_auto_fan_speed_boost
-                    name: Auto speed
-                    icon: mdi:fan-auto
-                    state_color: true
-                  - type: divider
-                  - entity: number.arturo_clean_count
-                    name: Passaggi pulizia
-                    state_color: true
-                  - type: divider
-                  - entity: switch.arturo_clean_preference
-                    name: Preferenze pulizia
-                    state_color: true
-                  - type: divider
-                  - entity: switch.arturo_continuous_cleaning
-                    name: Pulizia continua
-                    state_color: true
-                  - type: divider
-                  - entity: switch.arturo_true_detect
-                    name: Rilevamento ostacoli
-                    state_color: true
-                  - type: divider
-                  - entity: button.arturo_life_span_brush_reset
-                    name: Reset spazzole laterali
-                    state_color: true
-                  - type: divider
-                  - entity: button.arturo_life_span_filter_reset
-                    name: Reset filtro
-                    state_color: true
-                  - type: divider
-                  - entity: button.arturo_life_span_side_brush_reset
-                    name: Reset spazzola
-                    state_color: true
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
-      - icon: hass:information-outline
-        state: '{{ states(''none'') }}'
-        state_styles:
-          'on':
-            icon:
-              color: var(--paper-item-icon-active-color)
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              title: credit
-              style:
-                $: |
-                  .mdc-dialog
-                  .mdc-dialog__container
-                  .mdc-dialog__surface {
-                    border-radius: 15px;
-                  }
-              auto_close: false
-              content:
-                type: markdown
-                content: |-
-                  Pannello Arturo
-                  -------------------
-                  [Inspirato ai package domhouse](https://donazione.domhouse.it)
-                  ___
-                  Created: Francesco Bocchino
-                  ___
+          - type: custom:mushroom-template-card
+            primary: STOP
+            icon: mdi:stop
+            layout: horizontal
+            icon_color: '#6C572E'
+            tap_action:
+              action: call-service
+              service: vacuum.stop
+              service_data:
+                entity_id: vacuum.arturo
+          - type: custom:mushroom-template-card
+            primary: RICOLLOCA
+            icon: mdi:home-battery
+            layout: horizontal
+            icon_color: '#6C572E'
+            tap_action:
+              action: call-service
+              service: vacuum.return_to_base
+              service_data:
+                entity_id: vacuum.arturo
+    - type: entities
+      show_header_toggle: 'off'
+      style: |
+        .card-header {
+          padding: 0px 0px 0px 0px !important;
+        }
+      entities:
+        - type: custom:gap-card
+          height: 10
+        - type: custom:hui-element
+          card_type: vertical-stack
+          cards:
+            - type: horizontal-stack
+              cards:
+                - type: vertical-stack
+                  cards:
+                    - type: picture-elements
+                      image: /local/Floorplan/transparente.png
+                      elements:
+                        - type: image
+                          entity: vacuum.arturo
+                          state_image:
+                            docked: /local/ecovacs/ecovacs_n8_nosfondo.png
+                            cleaning: /local/ecovacs/ecovacs.gif
+                            returning: /local/ecovacs/ecovacs.gif
+                            paused: /local/ecovacs/ecovacs_n8_paused.png
+                          style:
+                            left: 50%
+                            top: 50%
+                            width: 100%
+                        - type: image
+                          image: /local/ecovacs/MOP.png
+                          style:
+                            left: 15%
+                            top: 15%
+                            width: 20%
+                        - type: image
+                          entity: binary_sensor.arturo_mop_attached
+                          state_image:
+                            'on': /local/check_ok.png
+                            'off': /local/check_ko.png
+                            unknown: /local/check_error.png
+                          style:
+                            left: 16%
+                            top: 10%
+                            width: 15%
+                      style: |
+                        ha-card {
+                            --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
+                            --ha-card-background: "rgba(0, 0, 0, 0.0)";
+                            --ha-card-box-shadow: 'none';
+                            width: 75%;
+                            margin-left: 20px;
+                        }
+                - type: vertical-stack
+                  cards:
+                    - type: custom:gap-card
+                      height: 0
+                    - type: conditional
+                      conditions:
+                        - entity: vacuum.arturo
+                          state_not: docked
+                      card:
+                        type: picture-entity
+                        show_state: true
+                        show_name: false
+                        camera_view: auto
+                        entity: image.arturo_map
+                        aspect_ratio: 80%
+                    - type: conditional
+                      conditions:
+                        - entity: vacuum.arturo
+                          state: docked
+                      card:
+                        type: vertical-stack
+                        cards:
+                          - type: custom:bar-card
+                            show_icon: true
+                            align: split
+                            columns: 1
+                            max: 100
+                            positions:
+                              icon: inside
+                              indicator: inside
+                              name: inside
+                              value: inside
+                            severity:
+                              - color: '#42A426'
+                                from: 40
+                                to: 100
+                              - color: '#E3A419'
+                                from: 10
+                                to: 40
+                              - color: '#BB230A'
+                                from: '0'
+                                to: 10
+                            style: |
+                              ha-card {
+                                --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
+                                --ha-card-background: "rgba(0, 0, 0, 0.0)";
+                                --paper-item-icon-color: 'var(--text-primary-color';
+                                --ha-card-box-shadow: 'none';
+                                --bar-card-border-radius: 10px
+                              }
+                            entity: sensor.arturo_life_span_filter
+                            name: Filtro
+                            entity_row: true
+                          - type: custom:bar-card
+                            show_icon: true
+                            align: split
+                            columns: 1
+                            max: 100
+                            positions:
+                              icon: inside
+                              indicator: inside
+                              name: inside
+                              value: inside
+                            severity:
+                              - color: '#42A426'
+                                from: 40
+                                to: 100
+                              - color: '#E3A419'
+                                from: 10
+                                to: 40
+                              - color: '#BB230A'
+                                from: '0'
+                                to: 10
+                            style: |
+                              ha-card {
+                                --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
+                                --ha-card-background: "rgba(0, 0, 0, 0.0)";
+                                --paper-item-icon-color: 'var(--text-primary-color';
+                                --ha-card-box-shadow: 'none';
+                                --bar-card-border-radius: 10px
+                              }
+                            entity: sensor.arturo_life_span_brush
+                            name: Spazzola
+                            entity_row: true
+                          - type: custom:bar-card
+                            show_icon: true
+                            align: split
+                            columns: 1
+                            max: 100
+                            positions:
+                              icon: inside
+                              indicator: inside
+                              name: inside
+                              value: inside
+                            severity:
+                              - color: '#42A426'
+                                from: 40
+                                to: 100
+                              - color: '#E3A419'
+                                from: 10
+                                to: 40
+                              - color: '#BB230A'
+                                from: '0'
+                                to: 10
+                            style: |
+                              ha-card {
+                                --paper-card-background-color: 'rgba(0, 0, 0, 0.0)';
+                                --ha-card-background: "rgba(0, 0, 0, 0.0)";
+                                --paper-item-icon-color: 'var(--text-primary-color';
+                                --ha-card-box-shadow: 'none';
+                                --bar-card-border-radius: 10px
+                              }
+                            entity: sensor.arturo_life_span_side_brush
+                            name: Spazzole laterali
+                            entity_row: true
+        - type: custom:paper-buttons-row
+          buttons:
+            - icon: mdi:vacuum
+              name: Impostazioni
+              layout: icon_name
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  service: browser_mod.popup
+                  data:
+                    title: Impostazioni
+                    style:
+                      $: |
+                        .mdc-dialog
+                        .mdc-dialog__container
+                        .mdc-dialog__surface {
+                          border-radius: 15px;
+                        }
+                    auto_close: false
+                    content:
+                      type: entities
+                      entities:
+                        - entity: number.arturo_volume
+                          name: Volume
+                        - entity: automation.vacuum_pulizia_ore
+                          name: puliza ore 19
+                        - entity: select.arturo_water_amount
+                          name: Acqua
+                        - entity: input_select.selettore_fan_speed
+                          name: Velocità
+                        - type: custom:gap-card
+                          height: 300
+            - icon: mdi:cog
+              name: Avanzate
+              show_name: true
+              layout: icon_name
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  service: browser_mod.popup
+                  data:
+                    title: Avanzate
+                    auto_close: false
+                    content:
+                      type: entities
+                      entities:
+                        - style:
+                            background: '#62717b'
+                            height: 1px
+                            margin-left: auto
+                            margin-right: auto
+                          type: divider
+                        - entity: switch.arturo_advanced_mode
+                          name: Modalità advanced
+                          state_color: true
+                        - type: divider
+                        - entity: switch.arturo_carpet_auto_fan_speed_boost
+                          name: Auto speed
+                          icon: mdi:fan-auto
+                          state_color: true
+                        - type: divider
+                        - entity: number.arturo_clean_count
+                          name: Passaggi pulizia
+                          state_color: true
+                        - type: divider
+                        - entity: switch.arturo_clean_preference
+                          name: Preferenze pulizia
+                          state_color: true
+                        - type: divider
+                        - entity: switch.arturo_continuous_cleaning
+                          name: Pulizia continua
+                          state_color: true
+                        - type: divider
+                        - entity: switch.arturo_true_detect
+                          name: Rilevamento ostacoli
+                          state_color: true
+                        - type: divider
+                        - entity: button.arturo_life_span_brush_reset
+                          name: Reset spazzole laterali
+                          state_color: true
+                        - type: divider
+                        - entity: button.arturo_life_span_filter_reset
+                          name: Reset filtro
+                          state_color: true
+                        - type: divider
+                        - entity: button.arturo_life_span_side_brush_reset
+                          name: Reset spazzola
+                          state_color: true
+                        - style:
+                            background: '#62717b'
+                            height: 1px
+                            margin-left: auto
+                            margin-right: auto
+                          type: divider
+            - icon: mdi:chart-bar-stacked
+              name: Statistiche
+              layout: icon_name
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  service: browser_mod.popup
+                  data:
+                    title: Ultima pulizia
+                    content:
+                      type: entities
+                      entities:
+                        - style:
+                            background: '#62717b'
+                            height: 1px
+                            margin-left: auto
+                            margin-right: auto
+                          type: divider
+                        - entity: sensor.arturo_last_error
+                          name: Errori
+                          state_color: true
+                        - type: divider
+                        - entity: sensor.arturo_last_cleaning
+                          name: Ultima pulizia
+                          icon: mdi:clock
+                          state_color: true
+                        - entity: sensor.ultima_pulizia_vacuum
+                          name: Ore dall'ultima pulizia
+                          icon: mdi:clock-check
+                        - type: divider
+                        - entity: sensor.arturo_stats_area
+                          name: Statistiche area
+                          state_color: true
+                        - type: divider
+                        - entity: sensor.arturo_stats_time
+                          name: Durata ultima pulizia
+                          state_color: true
+                        - type: divider
+                        - entity: sensor.arturo_stats_total_area
+                          name: Area totale
+                          state_color: true
+                        - type: divider
+                        - entity: sensor.arturo_stats_total_cleanings
+                          name: Pulizie totali
+                          state_color: true
+                        - type: divider
+                        - entity: sensor.arturo_stats_total_time
+                          name: Tempo totale
+                          state_color: true
+                        - type: divider
+                        - entity: sensor.arturo_stats_type
+                          name: Tipo ultima pulizia
+                          state_color: true
+                        - style:
+                            background: '#62717b'
+                            height: 1px
+                            margin-left: auto
+                            margin-right: auto
+                          type: divider
+            - icon: mdi:information-variant
+              name: Credit
+              layout: icon_name
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  service: browser_mod.popup
+                  data:
+                    title: Credit
+                    style:
+                      $: |
+                        .mdc-dialog
+                        .mdc-dialog__container
+                        .mdc-dialog__surface {
+                          border-radius: 15px;
+                        }
+                    auto_close: false
+                    content:
+                      type: markdown
+                      content: >-
+                        Pannello Arturo
+
+                        -------------------
+
+                        [Inspirato ai package
+                        domhouse](https://donazione.domhouse.it)
+
+                        ___
+
+                        Created: Francesco Bocchino
+
+                        Aggiornamenti o info :
+                        https://github.com/bocchinofr/home-assistant---card-ecovacs
+
+                        ___
+view_layout:
+  grid-area: riga2col1
