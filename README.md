@@ -34,5 +34,8 @@ Per la pulizia delle zone, personalmente ho creto una piantina della casa in 3d 
 
 Tutte le immagini utilizzate nella card ed inserite nelle varie cartelle local sono all'interno di questo progetto.
 
+Le immagini "bottone.png" che vedete nel codice potete inserirle nella stessa cartella ecovacs o come ho fatto io in quella del floorplan
+
+![Schermata 2023-09-22 alle 12 58 29](https://github.com/bocchinofr/home-assistant---card-ecovacs/assets/102295851/64b70591-c8c3-42dc-9d4d-aeefd2f168c5)
 
 ### Ovviamente è d'obbligo ringraziare domhouse.it da cui ho preso il template della card ed inspirazione.
